@@ -4,6 +4,8 @@ import logo from '../logo.png';
 import './App.css';
 import Marketplace from '../abis/MarketPlace.json';
 import Navbar from './Navbar';
+import Main from './Main';
+import Loading from './Loading';
 
 class App extends Component {
 
@@ -36,7 +38,9 @@ class App extends Component {
     const networkData = Marketplace.networks[networkId];
     if(networkData){
       const marketplace = web3.eth.Contract(Marketplace.abi, networkData.address);
-      console.log(marketplace);
+      const productCount = await marketplace.methods.productCount().call();
+      console.log(productCount.toNumber());
+      this.setState({marketplace, productCount: productCount.toNumber(), loading: false});
     }else{
       alert('Marketplace contract not deployed to detected network');
     }
@@ -51,6 +55,16 @@ class App extends Component {
       products: [],
       loading: true
     };
+
+    this.createProduct = this.createProduct.bind(this);
+  }
+
+  createProduct(name, price){
+    this.setState({loading: true});
+
+    this.state.marketplace.methods.createProduct(name,price).send({from: this.state.account}).once('receipt',(receipt)=>{
+      this.setState({loading: false});
+    });
   }
 
   render() {
@@ -60,26 +74,8 @@ class App extends Component {
         <div className="container-fluid mt-5">
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
-              <div className="content mr-auto ml-auto">
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={logo} className="App-logo" alt="logo" />
-                </a>
-                <h1>Al-Ghoul Blockchain Marketplace</h1>
-                <p>
-                  Edit <code>src/components/App.js</code> and save to reload.
-                </p>
-                <a
-                  className="App-link"
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CONNECT <u><b>METAMASK! </b></u>
-                </a>
+              <div className="content ">
+                {this.state.loading ? <Loading /> : <Main createProduct={this.createProduct} productCount={this.state.productCount} />}
               </div>
             </main>
           </div>
