@@ -36,13 +36,20 @@ class Main extends Component{
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>NFT Item 1</td>
-                            <td>ETH 1</td>
-                            <td>0xfA5254aDFbD6E8C21cFeAAb0Bd7535746FA03CC0</td>
-                            <td><button className='btn btn-secondary btn-sm'>buy</button></td>
-                        </tr>
+                        {this.props.products.map((product, key) => {
+                            return (
+                                <tr key={key}>
+                                    <td scope='row'>{product.id.toString()}</td>
+                                    <td>{product.name}</td>
+                                    <td>ETH {window.web3.utils.fromWei(product.price.toString(), 'Ether')}</td>
+                                    <td>{product.owner}</td>
+                                    <td><button name={product.id} value={product.price} onClick={(event) => {
+                                        this.props.purchaseProduct(event.target.name, event.target.value);
+                                    }} className='btn btn-secondary btn-sm'>buy</button></td>
+                                </tr>
+                            );
+                        })}
+                        
                     </tbody>
                 </table>
             </div>
