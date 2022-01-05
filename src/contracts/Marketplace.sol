@@ -30,7 +30,7 @@ contract Marketplace{
     );
 
     constructor() public {
-        name = 'Idoko Marketplace';
+        name = 'al-ghoul Marketplace';
     }
 
     function createProduct(string memory _name, uint _price) public{

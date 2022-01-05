@@ -92,7 +92,7 @@ contract('Marketplace', ([deployer, seller, buyer]) => {
             await await marketplace.purchaseProduct((productCount+1), {from: buyer, value: web3.utils.toWei('1','Ether')}).should.be.rejected;
 
             // invalid purchase amount
-            await await marketplace.purchaseProduct(productCount, {from: buyer, value: web3.utils.toWei('0','Ether')}).should.be.rejected;
+            await await marketplace.purchaseProduct(productCount, {from: buyer, value: web3.utils.toWei('0.9','Ether')}).should.be.rejected;
 
             // invalid buyer
             await await marketplace.purchaseProduct(productCount, {from: deployer, value: web3.utils.toWei('1','Ether')}).should.be.rejected;
